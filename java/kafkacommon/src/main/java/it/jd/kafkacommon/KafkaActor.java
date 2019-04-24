@@ -61,7 +61,7 @@ public class KafkaActor {
         ConsumerRecords<Long, String> consumerRecords = consumer.poll(Duration.ofMillis(1000));
         List<ConsumerRecord> messages=new ArrayList<>();
         // 1000 is the time in milliseconds consumer will wait if no record is found at broker.
-        if (consumerRecords.count() > 0 && msgHandler != null) {
+        if (consumerRecords.count() > 0) {
             consumerRecords.forEach(record -> messages.add(record));
         }
 
