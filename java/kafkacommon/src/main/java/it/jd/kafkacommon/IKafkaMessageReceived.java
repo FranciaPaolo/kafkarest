@@ -16,5 +16,5 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
  */
 public interface IKafkaMessageReceived {
     
-    public void messageReceived(String topic, List<ConsumerRecord> messages);
+    public void kafkaMessageReceived(String topic, List<ConsumerRecord> messages);
 }

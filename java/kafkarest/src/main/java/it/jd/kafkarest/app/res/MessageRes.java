@@ -28,13 +28,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 @Path("/message")
 public class MessageRes {
     
-    /*@GET
-    @Path("/{param}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public WriteMessageDto readMessage(@PathParam("param") String name) {
-        return new WriteMessageDto(name);
-    }*/
-    
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public ReadMessageResponseDto readMessage(@QueryParam("query") String json) {

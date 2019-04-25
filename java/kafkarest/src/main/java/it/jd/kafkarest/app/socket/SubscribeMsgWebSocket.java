@@ -10,7 +10,6 @@ import it.jd.kafkacommon.KafkaActor;
 import it.jd.kafkarest.app.JsonSerializer;
 import it.jd.kafkarest.app.res.dto.ReadMessageResponseDto;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -24,9 +23,11 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- *
+ * A new instance of this class will be created for every new websocket client
  * @author paul
  */
 @WebSocket
@@ -37,6 +38,8 @@ public class SubscribeMsgWebSocket extends WebSocketAdapter implements IKafkaMes
     public String topic;
     public String consumerGroup;
     public KafkaActor kafkaActor;
+    
+    private static final Logger log = LoggerFactory.getLogger(SubscribeMsgWebSocket.class);
 
     public SubscribeMsgWebSocket() {
         id = java.util.UUID.randomUUID().toString();
@@ -47,16 +50,16 @@ public class SubscribeMsgWebSocket extends WebSocketAdapter implements IKafkaMes
         this.session = session;
 
         Map<String, List<String>> headers = this.session.getUpgradeRequest().getHeaders();
+        // TODO possibile authentication from the headers (example using a token)
+        
+        // TODO throw exception if the query string is not formed by topic and consumerGroup
         String queryString = this.session.getUpgradeRequest().getQueryString();
         Map<String, String> queryMap = splitQuery(queryString);
-        
         topic=queryMap.get("topic");
         consumerGroup=queryMap.get("consumerGroup");
         
         kafkaActor=new KafkaActor.Builder().withConsumerGroup(consumerGroup).build();
-        
-        SocketManager.getInstance().join(this);
-        
+        SocketManager.getInstance().join(this);        
         kafkaActor.subscribe(Arrays.asList(new String[]{topic}), this);
     }
 
@@ -67,7 +70,7 @@ public class SubscribeMsgWebSocket extends WebSocketAdapter implements IKafkaMes
 
     @OnWebSocketError
     public void onWebSocketError(Throwable t) {
-        //System.out.println("Error: " + t.getMessage());
+        log.error("onWebSocketError", t);
     }
 
     @OnWebSocketMessage
@@ -82,7 +85,7 @@ public class SubscribeMsgWebSocket extends WebSocketAdapter implements IKafkaMes
         try {
             session.getRemote().sendString(text);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("sendMessageToRemote", e);
         }
     }
 
@@ -96,12 +99,14 @@ public class SubscribeMsgWebSocket extends WebSocketAdapter implements IKafkaMes
                 query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
             }
         } catch (Exception e) {
+            log.error("splitQuery", e);
         }
         return query_pairs;
     }
 
+    
     @Override
-    public void messageReceived(String topic, List<ConsumerRecord> messages) {
+    public void kafkaMessageReceived(String topic, List<ConsumerRecord> messages) {
         
         // create the response dto
         ReadMessageResponseDto responseDto=new ReadMessageResponseDto();

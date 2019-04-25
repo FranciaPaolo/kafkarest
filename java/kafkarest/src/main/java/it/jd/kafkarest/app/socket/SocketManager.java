@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * WebSocket connected clients Manager
  * @author paul
  */
 public class SocketManager {
@@ -34,7 +34,6 @@ public class SocketManager {
     public void leave(SubscribeMsgWebSocket socket) 
     {
         members.remove(socket);
-        
         log.info("leaved: "+socket.id);
     }
     
@@ -52,7 +51,6 @@ public class SocketManager {
         {
             if(member.equals(from))
             {
-                //
                 log.info("messageReceived: "+member.id);
                 return;
             }

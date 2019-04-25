@@ -44,7 +44,7 @@ public class KafkaReaderRunnable implements Runnable {
             if (consumerRecords.count() > 0 && msgHandler != null) {
                 List<ConsumerRecord> msg = new ArrayList<>();
                 consumerRecords.forEach(record -> msg.add(record));
-                msgHandler.messageReceived(msg.get(0).topic(), msg);
+                msgHandler.kafkaMessageReceived(msg.get(0).topic(), msg);
             }
 
             // commits the offset of record to broker. 
