@@ -24,13 +24,13 @@ TODO write the example
 
 ## Rest Methods
 ### get new messages
-method: message
-type: HTTP GET
+method: message  
+type: HTTP GET  
 description: get all new messages in a topic
 
-Example (using Postman rest client)
+#### Example (using Postman rest client)
 
-Request:
+** Request: **
 > http://localhost:7070/api/message?query=%7B%0A%22topic%22%3A%22fast-messages%22%2C%0A%22consumerGroup%22%3A%22consumerGroup1%22%0A%7D
 
 Notes: query parameter is the url encode (https://www.urlencoder.org/) of
@@ -39,7 +39,7 @@ Notes: query parameter is the url encode (https://www.urlencoder.org/) of
 >"consumerGroup":"consumerGroup1"
 >}
 
-Response:
+** Response: **
 >{
 >    "topic": "fast-messages",
 >    "messages": [
@@ -54,16 +54,17 @@ Response:
 >    ]
 >}
 
-### get new messages
-method: message
-type: HTTP POST
+### write message
+method: message  
+type: HTTP POST  
 description: write a message in the topic
 
-Example (using Postman rest client)
+#### Example (using Postman rest client)
 
-Request:
+** Request: **
 > http://localhost:7070/api/message
-Request Body (application/json)
+
+** Request Body (application/json) **
 >{
 >	"producerId":"producerId1",
 >	"topic":"fast-messages",
