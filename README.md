@@ -31,15 +31,18 @@ description: get all new messages in a topic
 #### Example (using Postman rest client)
 
 **Request:**
+
     http://localhost:7070/api/message?query=%7B%0A%22topic%22%3A%22fast-messages%22%2C%0A%22consumerGroup%22%3A%22consumerGroup1%22%0A%7D
 
 Notes: query parameter is the url encode (https://www.urlencoder.org/) of
+
     {
     "topic":"fast-messages",
     "consumerGroup":"consumerGroup1"
     }
 
 **Response:**
+
     {
         "topic": "fast-messages",
         "messages": [
@@ -62,9 +65,11 @@ description: write a message in the topic
 #### Example (using Postman rest client)
 
 **Request:**  
+
     http://localhost:7070/api/message
 
 **Request Body (application/json)**
+
     {
     	"producerId":"producerId1",
     	"topic":"fast-messages",
@@ -80,6 +85,7 @@ Used to notify the client for new messages.
     ws://localhost:7070/messaging?topic=fast-messages&consumerGroup=cg1
 
 When new messages are written to the topic:  
+
     {"topic":"fast-messages","messages":[{"message":"test from postman1","offset":4316}]}
     {"topic":"fast-messages","messages":[{"message":"test from postman1","offset":4317}]}
     {"topic":"fast-messages","messages":[{"message":"test from postman1","offset":4318}]}
